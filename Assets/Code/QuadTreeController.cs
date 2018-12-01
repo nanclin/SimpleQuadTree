@@ -34,8 +34,10 @@ public class QuadTreeController : MonoBehaviour {
     private void DrawQuadTree(QuadTree tree) {
 
         // draw frame
-        if (tree == tree.GetRoot && ShowGrid)
+        if (tree == tree.GetRoot) {
+            Gizmos.color = Color.white;
             Gizmos.DrawWireCube(Vector2.one * tree.Size * 0.5f, Vector3.one * tree.Size);
+        }
 
         float cx = tree.Position.x + tree.Size * 0.5f;
         float cy = tree.Position.y + tree.Size * 0.5f;
@@ -53,11 +55,11 @@ public class QuadTreeController : MonoBehaviour {
             Gizmos.color = Color.Lerp(Color.black, Color.white, t) * transparency;
             Gizmos.DrawCube(new Vector2(cx, cy), Vector3.one * size);
         }
-        Gizmos.color = Color.white; // reset color
 
         if (tree.SubTrees != null) {
             // draw cross
             if (ShowGrid) {
+                Gizmos.color = Color.white * 0.5f;
                 Gizmos.DrawLine(new Vector2(tree.Position.x, cy), new Vector2(tree.Position.x + tree.Size, cy));
                 Gizmos.DrawLine(new Vector2(cx, tree.Position.y), new Vector2(cx, tree.Position.y + tree.Size));
             }
