@@ -65,4 +65,32 @@ public class QuadTree {
         }
         nextSubTree.SetValue(pos, value, root, depth + 1);
     }
+
+    public float GetValue(Vector2 pos, QuadTree root = null, int depth = 0) {
+        // reached leaf
+        if (depth >= root.TreeHeight || this.SubTrees == null) {
+            return Value;
+        }
+
+        QuadTree nextSubTree = null;
+        float x = pos.x;
+        float y = pos.y;
+        float hs = this.Size * 0.5f; // half size
+        float cx = this.Position.x + hs; // center x
+        float cy = this.Position.y + hs; // center y
+        if (x > cx && y > cy) {
+            // quadrant 1
+            nextSubTree = SubTrees[0];
+        } else if (x <= cx && y > cy) {
+            // quadrant 2
+            nextSubTree = SubTrees[1];
+        } else if (x <= cx && y <= cy) {
+            // quadrant 3
+            nextSubTree = SubTrees[2];
+        } else if (x > cx && y <= cy) {
+            // quadrant 4
+            nextSubTree = SubTrees[3];
+        }
+        return nextSubTree.GetValue(pos, root, depth + 1);
+    }
 }

@@ -17,9 +17,11 @@ public class QuadTreeController : MonoBehaviour {
             Tree = new QuadTree(Vector2.zero, 1, 0, TreeHeight);
         }
 
-        if (Input.GetMouseButton(0)) {
+        if (Input.GetMouseButton(0) && Tree != null) {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (Tree != null)
+            if (Input.GetKey(KeyCode.LeftShift))
+                Debug.Log(Tree.GetValue(mousePos, Tree));
+            else
                 Tree.SetValue(mousePos, 1, Tree);
         }
     }
