@@ -93,4 +93,43 @@ public class QuadTree {
         }
         return nextSubTree.GetValue(pos, root, depth + 1);
     }
+
+    public void SetValueCircle(float value, Vector2 center, float radius, QuadTree root = null, int depth = 0) {
+
+        // check collision
+        float deltaX = center.x - Mathf.Max(this.Position.x, Mathf.Min(this.Position.x + this.Size, center.x));
+        float deltaY = center.y - Mathf.Max(this.Position.y, Mathf.Min(this.Position.y + this.Size, center.y));
+        float dist = (deltaX * deltaX + deltaY * deltaY) - (radius * radius);
+
+        // not colliding
+        if (dist > 0) {
+            return;
+        }
+
+        // leaf reached
+        if (depth == root.TreeHeight) {
+            this.Value = value;
+            return;
+        }
+
+        // split
+        if (SubTrees == null) {
+            float hs = this.Size * 0.5f; // half size
+            SubTrees = new QuadTree[4];
+            Vector2 newPos0 = this.Position + new Vector2(hs, hs);
+            Vector2 newPos1 = this.Position + new Vector2(0, hs);
+            Vector2 newPos2 = this.Position + new Vector2(0, 0);
+            Vector2 newPos3 = this.Position + new Vector2(hs, 0);
+            SubTrees[0] = new QuadTree(newPos0, hs, 0, this.TreeHeight - 1, root, depth + 1);
+            SubTrees[1] = new QuadTree(newPos1, hs, 0, this.TreeHeight - 1, root, depth + 1);
+            SubTrees[2] = new QuadTree(newPos2, hs, 0, this.TreeHeight - 1, root, depth + 1);
+            SubTrees[3] = new QuadTree(newPos3, hs, 0, this.TreeHeight - 1, root, depth + 1);
+        }
+
+        // continue checking in lower dimension
+        this.SubTrees[0].SetValueCircle(value, center, radius, root, depth + 1);
+        this.SubTrees[1].SetValueCircle(value, center, radius, root, depth + 1);
+        this.SubTrees[2].SetValueCircle(value, center, radius, root, depth + 1);
+        this.SubTrees[3].SetValueCircle(value, center, radius, root, depth + 1);
+    }
 }

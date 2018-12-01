@@ -8,6 +8,7 @@ public class QuadTreeController : MonoBehaviour {
     [SerializeField] [Range(0, 5)] private int TreeHeight = 3;
     [SerializeField] bool ShowGrid = true;
     [SerializeField] bool ShowOnlyFullValues = false;
+    [SerializeField] float Radius = 1;
 
     private QuadTree Tree;
 
@@ -21,14 +22,21 @@ public class QuadTreeController : MonoBehaviour {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (Input.GetKey(KeyCode.LeftShift))
                 Debug.Log(Tree.GetValue(mousePos, Tree));
-            else
-                Tree.SetValue(mousePos, 1, Tree);
+            else {
+//                Tree.SetValue(mousePos, 1, Tree); // point set value
+                Tree.SetValueCircle(1, mousePos, Radius, Tree); // circle set value
+            }
         }
+
     }
 
     void OnDrawGizmos() {
         if (Tree != null)
             DrawQuadTree(Tree);
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(mousePos, Radius);
     }
 
     private void DrawQuadTree(QuadTree tree) {
